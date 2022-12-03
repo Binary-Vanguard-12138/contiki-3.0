@@ -181,6 +181,7 @@ dis_input(void)
 void
 dis_output(uip_ipaddr_t *addr)
 {
+  // printf("===================== dis_output\n");
   unsigned char *buffer;
   uip_ipaddr_t tmpaddr;
 
@@ -211,6 +212,7 @@ dis_output(uip_ipaddr_t *addr)
 static void
 dio_input(void)
 {
+  // printf("================= dio_input\n");
   unsigned char *buffer;
   uint8_t buffer_length;
   rpl_dio_t dio;
@@ -237,7 +239,7 @@ dio_input(void)
   /* DAG Information Object */
   PRINTF("RPL: Received a DIO from ");
   PRINT6ADDR(&from);
-  PRINTF("\n");
+  printf("\n");
 
   if((nbr = uip_ds6_nbr_lookup(&from)) == NULL) {
     if((nbr = uip_ds6_nbr_add(&from, (uip_lladdr_t *)
@@ -245,21 +247,21 @@ dio_input(void)
                               0, NBR_REACHABLE)) != NULL) {
       /* set reachable timer */
       stimer_set(&nbr->reachable, UIP_ND6_REACHABLE_TIME / 1000);
-      PRINTF("RPL: Neighbor added to neighbor cache ");
+      printf("RPL: Neighbor added to neighbor cache ");
       PRINT6ADDR(&from);
-      PRINTF(", ");
+      printf(", ");
       PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
-      PRINTF("\n");
+      printf("\n");
     } else {
-      PRINTF("RPL: Out of memory, dropping DIO from ");
+      printf("RPL: Out of memory, dropping DIO from ");
       PRINT6ADDR(&from);
-      PRINTF(", ");
+      printf(", ");
       PRINTLLADDR((uip_lladdr_t *)packetbuf_addr(PACKETBUF_ADDR_SENDER));
-      PRINTF("\n");
+      printf("\n");
       return;
     }
   } else {
-    PRINTF("RPL: Neighbor already in neighbor cache\n");
+    printf("RPL: Neighbor already in neighbor cache\n");
   }
 
   buffer_length = uip_len - uip_l3_icmp_hdr_len;
@@ -273,7 +275,7 @@ dio_input(void)
   dio.rank = get16(buffer, i);
   i += 2;
 
-  PRINTF("RPL: Incoming DIO (id, ver, rank) = (%u,%u,%u)\n",
+  printf("RPL: Incoming DIO (id, ver, rank) = (%u,%u,%u)\n",
          (unsigned)dio.instance_id,
          (unsigned)dio.version,
          (unsigned)dio.rank);
@@ -289,9 +291,9 @@ dio_input(void)
   memcpy(&dio.dag_id, buffer + i, sizeof(dio.dag_id));
   i += sizeof(dio.dag_id);
 
-  PRINTF("RPL: Incoming DIO (dag_id, pref) = (");
+  printf("RPL: Incoming DIO (dag_id, pref) = (");
   PRINT6ADDR(&dio.dag_id);
-  PRINTF(", %u)\n", dio.preference);
+  printf(", %u)\n", dio.preference);
 
   /* Check if there are any DIO suboptions. */
   for(; i < buffer_length; i += len) {
@@ -304,7 +306,7 @@ dio_input(void)
     }
 
     if(len + i > buffer_length) {
-      PRINTF("RPL: Invalid DIO packet\n");
+      printf("RPL: Invalid DIO packet\n");
       RPL_STAT(rpl_stats.malformed_msgs++);
       return;
     }
@@ -561,12 +563,12 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   }
 
 buffer[pos++] = RPL_OPTION_STABILITY;
- buffer[pos++] = 2;
+ buffer[pos++] = 1;
  if(dag->rank == ROOT_RANK(instance)) {
  dag-> dag_size = uip_ds6_route_num_routes();
 }
-buffer[pos] = dag->dag_size;
-printf("RPL: stability option with dag_size=%u \n", buffer[pos]);
+buffer[pos++] = dag->dag_size;
+printf("RPL: stability option with dag_size=%u \n", buffer[pos-1]);
 
 
 

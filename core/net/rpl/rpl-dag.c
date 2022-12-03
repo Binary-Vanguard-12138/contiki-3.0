@@ -618,7 +618,8 @@ rpl_free_dag(rpl_dag_t *dag)
 rpl_parent_t *
 rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
 {
-  rpl_parent_t *p = NULL;
+  // printf("============== ======= rpl_add_parent\n");
+      rpl_parent_t *p = NULL;
   /* Is the parent known by ds6? Drop this request if not.
    * Typically, the parent is added upon receiving a DIO. */
   const uip_lladdr_t *lladdr = uip_ds6_nbr_lladdr_from_ipaddr(addr);
