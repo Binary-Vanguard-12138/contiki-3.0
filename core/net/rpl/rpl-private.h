@@ -49,7 +49,7 @@
 /*---------------------------------------------------------------------------*/
 /** \brief Is IPv6 address addr the link-local, all-RPL-nodes
     multicast address? */
-#define uip_is_addr_linklocal_rplnodes_mcast(addr)	    \
+#define uip_is_addr_linklocal_rplnodes_mcast(addr) \
   ((addr)->u8[0] == 0xff) &&				    \
   ((addr)->u8[1] == 0x02) &&				    \
   ((addr)->u16[1] == 0) &&				    \
@@ -63,105 +63,104 @@
 
 /** \brief Set IP address addr to the link-local, all-rpl-nodes
     multicast address. */
-#define uip_create_linklocal_rplnodes_mcast(addr)	\
+#define uip_create_linklocal_rplnodes_mcast(addr) \
   uip_ip6addr((addr), 0xff02, 0, 0, 0, 0, 0, 0, 0x001a)
 /*---------------------------------------------------------------------------*/
 /* RPL message types */
-#define RPL_CODE_DIS                   0x00   /* DAG Information Solicitation */
-#define RPL_CODE_DIO                   0x01   /* DAG Information Option */
-#define RPL_CODE_DAO                   0x02   /* Destination Advertisement Option */
-#define RPL_CODE_DAO_ACK               0x03   /* DAO acknowledgment */
-#define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
-#define RPL_CODE_SEC_DIO               0x81   /* Secure DIO */
-#define RPL_CODE_SEC_DAO               0x82   /* Secure DAO */
-#define RPL_CODE_SEC_DAO_ACK           0x83   /* Secure DAO ACK */
+#define RPL_CODE_DIS 0x00         /* DAG Information Solicitation */
+#define RPL_CODE_DIO 0x01         /* DAG Information Option */
+#define RPL_CODE_DAO 0x02         /* Destination Advertisement Option */
+#define RPL_CODE_DAO_ACK 0x03     /* DAO acknowledgment */
+#define RPL_CODE_SEC_DIS 0x80     /* Secure DIS */
+#define RPL_CODE_SEC_DIO 0x81     /* Secure DIO */
+#define RPL_CODE_SEC_DAO 0x82     /* Secure DAO */
+#define RPL_CODE_SEC_DAO_ACK 0x83 /* Secure DAO ACK */
 
 /* RPL control message options. */
-#define RPL_OPTION_PAD1                  0
-#define RPL_OPTION_PADN                  1
-#define RPL_OPTION_DAG_METRIC_CONTAINER  2
-#define RPL_OPTION_ROUTE_INFO            3
-#define RPL_OPTION_DAG_CONF              4
-#define RPL_OPTION_TARGET                5
-#define RPL_OPTION_TRANSIT               6
-#define RPL_OPTION_SOLICITED_INFO        7
-#define RPL_OPTION_PREFIX_INFO           8
-#define RPL_OPTION_TARGET_DESC           9
+#define RPL_OPTION_PAD1 0
+#define RPL_OPTION_PADN 1
+#define RPL_OPTION_DAG_METRIC_CONTAINER 2
+#define RPL_OPTION_ROUTE_INFO 3
+#define RPL_OPTION_DAG_CONF 4
+#define RPL_OPTION_TARGET 5
+#define RPL_OPTION_TRANSIT 6
+#define RPL_OPTION_SOLICITED_INFO 7
+#define RPL_OPTION_PREFIX_INFO 8
+#define RPL_OPTION_TARGET_DESC 9
 
-#define RPL_OPTION_STABILITY             10
+#define RPL_OPTION_STABILITY 10
 
-#define RPL_DAO_K_FLAG                   0x80 /* DAO ACK requested */
-#define RPL_DAO_D_FLAG                   0x40 /* DODAG ID present */
+#define RPL_DAO_K_FLAG 0x80 /* DAO ACK requested */
+#define RPL_DAO_D_FLAG 0x40 /* DODAG ID present */
 /*---------------------------------------------------------------------------*/
 /* RPL IPv6 extension header option. */
-#define RPL_HDR_OPT_LEN			4
-#define RPL_HOP_BY_HOP_LEN		(RPL_HDR_OPT_LEN + 2 + 2)
-#define RPL_HDR_OPT_DOWN		0x80
-#define RPL_HDR_OPT_DOWN_SHIFT  	7
-#define RPL_HDR_OPT_RANK_ERR		0x40
-#define RPL_HDR_OPT_RANK_ERR_SHIFT   	6
-#define RPL_HDR_OPT_FWD_ERR		0x20
-#define RPL_HDR_OPT_FWD_ERR_SHIFT   	5
+#define RPL_HDR_OPT_LEN 4
+#define RPL_HOP_BY_HOP_LEN (RPL_HDR_OPT_LEN + 2 + 2)
+#define RPL_HDR_OPT_DOWN 0x80
+#define RPL_HDR_OPT_DOWN_SHIFT 7
+#define RPL_HDR_OPT_RANK_ERR 0x40
+#define RPL_HDR_OPT_RANK_ERR_SHIFT 6
+#define RPL_HDR_OPT_FWD_ERR 0x20
+#define RPL_HDR_OPT_FWD_ERR_SHIFT 5
 /*---------------------------------------------------------------------------*/
 /* Default values for RPL constants and variables. */
 
 /* The default value for the DAO timer. */
 #ifdef RPL_CONF_DAO_LATENCY
-#define RPL_DAO_LATENCY                 RPL_CONF_DAO_LATENCY
+#define RPL_DAO_LATENCY RPL_CONF_DAO_LATENCY
 #else /* RPL_CONF_DAO_LATENCY */
-#define RPL_DAO_LATENCY                 (CLOCK_SECOND * 4)
+#define RPL_DAO_LATENCY (CLOCK_SECOND * 4)
 #endif /* RPL_DAO_LATENCY */
 
 /* Special value indicating immediate removal. */
-#define RPL_ZERO_LIFETIME               0
+#define RPL_ZERO_LIFETIME 0
 
 #define RPL_LIFETIME(instance, lifetime) \
-          ((unsigned long)(instance)->lifetime_unit * (lifetime))
+  ((unsigned long)(instance)->lifetime_unit * (lifetime))
 
 #ifndef RPL_CONF_MIN_HOPRANKINC
-#define RPL_MIN_HOPRANKINC          256
+#define RPL_MIN_HOPRANKINC 256
 #else
-#define RPL_MIN_HOPRANKINC          RPL_CONF_MIN_HOPRANKINC
+#define RPL_MIN_HOPRANKINC RPL_CONF_MIN_HOPRANKINC
 #endif
-#define RPL_MAX_RANKINC             (7 * RPL_MIN_HOPRANKINC)
+#define RPL_MAX_RANKINC (7 * RPL_MIN_HOPRANKINC)
 
 #define DAG_RANK(fixpt_rank, instance) \
   ((fixpt_rank) / (instance)->min_hoprankinc)
 
 /* Rank of a virtual root node that coordinates DAG root nodes. */
-#define BASE_RANK                       0
+#define BASE_RANK 0
 
 /* Rank of a root node. */
-#define ROOT_RANK(instance)             (instance)->min_hoprankinc
+#define ROOT_RANK(instance) (instance)->min_hoprankinc
 
-#define INFINITE_RANK                   0xffff
-
+#define INFINITE_RANK 0xffff
 
 /* Expire DAOs from neighbors that do not respond in this time. (seconds) */
-#define DAO_EXPIRATION_TIMEOUT          60
+#define DAO_EXPIRATION_TIMEOUT 60
 /*---------------------------------------------------------------------------*/
-#define RPL_INSTANCE_LOCAL_FLAG         0x80
-#define RPL_INSTANCE_D_FLAG             0x40
+#define RPL_INSTANCE_LOCAL_FLAG 0x80
+#define RPL_INSTANCE_D_FLAG 0x40
 
 /* Values that tell where a route came from. */
-#define RPL_ROUTE_FROM_INTERNAL         0
-#define RPL_ROUTE_FROM_UNICAST_DAO      1
-#define RPL_ROUTE_FROM_MULTICAST_DAO    2
-#define RPL_ROUTE_FROM_DIO              3
+#define RPL_ROUTE_FROM_INTERNAL 0
+#define RPL_ROUTE_FROM_UNICAST_DAO 1
+#define RPL_ROUTE_FROM_MULTICAST_DAO 2
+#define RPL_ROUTE_FROM_DIO 3
 
 /* DAG Mode of Operation */
-#define RPL_MOP_NO_DOWNWARD_ROUTES      0
-#define RPL_MOP_NON_STORING             1
-#define RPL_MOP_STORING_NO_MULTICAST    2
-#define RPL_MOP_STORING_MULTICAST       3
+#define RPL_MOP_NO_DOWNWARD_ROUTES 0
+#define RPL_MOP_NON_STORING 1
+#define RPL_MOP_STORING_NO_MULTICAST 2
+#define RPL_MOP_STORING_MULTICAST 3
 
-#ifdef  RPL_CONF_MOP
-#define RPL_MOP_DEFAULT                 RPL_CONF_MOP
+#ifdef RPL_CONF_MOP
+#define RPL_MOP_DEFAULT RPL_CONF_MOP
 #else /* RPL_CONF_MOP */
 #if RPL_CONF_MULTICAST
-#define RPL_MOP_DEFAULT                 RPL_MOP_STORING_MULTICAST
+#define RPL_MOP_DEFAULT RPL_MOP_STORING_MULTICAST
 #else
-#define RPL_MOP_DEFAULT                 RPL_MOP_STORING_NO_MULTICAST
+#define RPL_MOP_DEFAULT RPL_MOP_STORING_NO_MULTICAST
 #endif /* UIP_IPV6_MULTICAST_RPL */
 #endif /* RPL_CONF_MOP */
 
@@ -178,41 +177,46 @@
 #endif
 
 /*
- * The ETX in the metric container is expressed as a fixed-point value 
- * whose integer part can be obtained by dividing the value by 
+ * The ETX in the metric container is expressed as a fixed-point value
+ * whose integer part can be obtained by dividing the value by
  * RPL_DAG_MC_ETX_DIVISOR.
  */
-#define RPL_DAG_MC_ETX_DIVISOR		256
+#define RPL_DAG_MC_ETX_DIVISOR 256
 
 /* DIS related */
-#define RPL_DIS_SEND                    1
-#ifdef  RPL_DIS_INTERVAL_CONF
-#define RPL_DIS_INTERVAL                RPL_DIS_INTERVAL_CONF
+#define RPL_DIS_SEND 1
+#ifdef RPL_DIS_INTERVAL_CONF
+#define RPL_DIS_INTERVAL RPL_DIS_INTERVAL_CONF
 #else
-#define RPL_DIS_INTERVAL                60
+#define RPL_DIS_INTERVAL 60
 #endif
-#define RPL_DIS_START_DELAY             5
+#define RPL_DIS_START_DELAY 5
 /*---------------------------------------------------------------------------*/
 /* Lollipop counters */
 
-#define RPL_LOLLIPOP_MAX_VALUE           255
-#define RPL_LOLLIPOP_CIRCULAR_REGION     127
-#define RPL_LOLLIPOP_SEQUENCE_WINDOWS    16
-#define RPL_LOLLIPOP_INIT                (RPL_LOLLIPOP_MAX_VALUE - RPL_LOLLIPOP_SEQUENCE_WINDOWS + 1)
-#define RPL_LOLLIPOP_INCREMENT(counter)                                 \
-  do {                                                                  \
-    if((counter) > RPL_LOLLIPOP_CIRCULAR_REGION) {                      \
-      (counter) = ((counter) + 1) & RPL_LOLLIPOP_MAX_VALUE;             \
-    } else {                                                            \
-      (counter) = ((counter) + 1) & RPL_LOLLIPOP_CIRCULAR_REGION;       \
-    }                                                                   \
-  } while(0)
+#define RPL_LOLLIPOP_MAX_VALUE 255
+#define RPL_LOLLIPOP_CIRCULAR_REGION 127
+#define RPL_LOLLIPOP_SEQUENCE_WINDOWS 16
+#define RPL_LOLLIPOP_INIT (RPL_LOLLIPOP_MAX_VALUE - RPL_LOLLIPOP_SEQUENCE_WINDOWS + 1)
+#define RPL_LOLLIPOP_INCREMENT(counter)                           \
+  do                                                              \
+  {                                                               \
+    if ((counter) > RPL_LOLLIPOP_CIRCULAR_REGION)                 \
+    {                                                             \
+      (counter) = ((counter) + 1) & RPL_LOLLIPOP_MAX_VALUE;       \
+    }                                                             \
+    else                                                          \
+    {                                                             \
+      (counter) = ((counter) + 1) & RPL_LOLLIPOP_CIRCULAR_REGION; \
+    }                                                             \
+  } while (0)
 
-#define RPL_LOLLIPOP_IS_INIT(counter)		\
+#define RPL_LOLLIPOP_IS_INIT(counter) \
   ((counter) > RPL_LOLLIPOP_CIRCULAR_REGION)
 /*---------------------------------------------------------------------------*/
 /* Logical representation of a DAG Information Object (DIO.) */
-struct rpl_dio {
+struct rpl_dio
+{
   uip_ipaddr_t dag_id;
   rpl_ocp_t ocp;
   rpl_rank_t rank;
@@ -228,8 +232,6 @@ struct rpl_dio {
   uint8_t default_lifetime;
 
   uint8_t dag_size;
-  uint8_t hop_count;
-
 
   uint16_t lifetime_unit;
   rpl_rank_t dag_max_rankinc;
@@ -242,7 +244,8 @@ typedef struct rpl_dio rpl_dio_t;
 
 #if RPL_CONF_STATS
 /* Statistics for fault management. */
-struct rpl_stats {
+struct rpl_stats
+{
   uint16_t mem_overflows;
   uint16_t local_repairs;
   uint16_t global_repairs;
@@ -262,7 +265,7 @@ extern rpl_stats_t rpl_stats;
 /* RPL macros. */
 
 #if RPL_CONF_STATS
-#define RPL_STAT(code)	(code) 
+#define RPL_STAT(code) (code)
 #else
 #define RPL_STAT(code)
 #endif /* RPL_CONF_STATS */
@@ -300,7 +303,7 @@ void rpl_nullify_parent(rpl_parent_t *);
 void rpl_remove_parent(rpl_parent_t *);
 void rpl_move_parent(rpl_dag_t *dag_src, rpl_dag_t *dag_dst, rpl_parent_t *parent);
 rpl_parent_t *rpl_select_parent(rpl_dag_t *dag);
-rpl_dag_t *rpl_select_dag(rpl_instance_t *instance,rpl_parent_t *parent);
+rpl_dag_t *rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *parent);
 void rpl_recalculate_ranks(void);
 
 /* RPL routing table functions. */
@@ -327,7 +330,6 @@ void rpl_reset_periodic_timer(void);
 
 /* Route poisoning. */
 void rpl_poison_routes(rpl_dag_t *, rpl_parent_t *);
-
 
 rpl_instance_t *rpl_get_default_instance(void);
 

@@ -1103,7 +1103,6 @@ void rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   dag->version = dio->version;
 
   dag->dag_size = dio->dag_size;
-  dag->hop_count = dio->hop_count;
 
   instance->of = of;
   instance->mop = dio->mop;
@@ -1223,7 +1222,6 @@ void rpl_add_dag(uip_ipaddr_t *from, rpl_dio_t *dio)
   dag->version = dio->version;
 
   dag->dag_size = dio->dag_size;
-  dag->hop_count = dio->hop_count;
 
   memcpy(&dag->dag_id, &dio->dag_id, sizeof(dio->dag_id));
 

@@ -227,9 +227,9 @@ best_dag(rpl_dag_t *d1, rpl_dag_t *d2)
     return d1->preference > d2->preference ? d1 : d2;
   }
 
-  uint32_t Q1 = d1->dag_size * DAG_SIZE_WEIGHT + d1->hop_count * HOP_COUNT_WEIGHT + d1->rank * RANK_WEIGHT;
+  uint32_t Q1 = d1->dag_size * DAG_SIZE_WEIGHT + d1->instance->mc.obj.hc * HOP_COUNT_WEIGHT + d1->rank * RANK_WEIGHT;
 
-  uint32_t Q2 = d2->dag_size * DAG_SIZE_WEIGHT + d2->hop_count * HOP_COUNT_WEIGHT + d2->rank * RANK_WEIGHT;
+  uint32_t Q2 = d2->dag_size * DAG_SIZE_WEIGHT + d2->instance->mc.obj.hc * HOP_COUNT_WEIGHT + d2->rank * RANK_WEIGHT;
 
   return Q1 < Q2 ? d1 : d2;
 }

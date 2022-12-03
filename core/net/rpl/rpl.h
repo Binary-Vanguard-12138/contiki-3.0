@@ -50,52 +50,55 @@ typedef uint16_t rpl_rank_t;
 typedef uint16_t rpl_ocp_t;
 /*---------------------------------------------------------------------------*/
 /* DAG Metric Container Object Types, to be confirmed by IANA. */
-#define RPL_DAG_MC_NONE			0 /* Local identifier for empty MC */
-#define RPL_DAG_MC_NSA                  1 /* Node State and Attributes */
-#define RPL_DAG_MC_ENERGY               2 /* Node Energy */
-#define RPL_DAG_MC_HOPCOUNT             3 /* Hop Count */
-#define RPL_DAG_MC_THROUGHPUT           4 /* Throughput */
-#define RPL_DAG_MC_LATENCY              5 /* Latency */
-#define RPL_DAG_MC_LQL                  6 /* Link Quality Level */
-#define RPL_DAG_MC_ETX                  7 /* Expected Transmission Count */
-#define RPL_DAG_MC_LC                   8 /* Link Color */
-#define RPL_DAG_MC_HOP                  9 /* Hop Count */
+#define RPL_DAG_MC_NONE 0       /* Local identifier for empty MC */
+#define RPL_DAG_MC_NSA 1        /* Node State and Attributes */
+#define RPL_DAG_MC_ENERGY 2     /* Node Energy */
+#define RPL_DAG_MC_HOPCOUNT 3   /* Hop Count */
+#define RPL_DAG_MC_THROUGHPUT 4 /* Throughput */
+#define RPL_DAG_MC_LATENCY 5    /* Latency */
+#define RPL_DAG_MC_LQL 6        /* Link Quality Level */
+#define RPL_DAG_MC_ETX 7        /* Expected Transmission Count */
+#define RPL_DAG_MC_LC 8         /* Link Color */
+#define RPL_DAG_MC_HOP 9        /* Hop Count */
 
 /* DAG Metric Container flags. */
-#define RPL_DAG_MC_FLAG_P               0x8
-#define RPL_DAG_MC_FLAG_C               0x4
-#define RPL_DAG_MC_FLAG_O               0x2
-#define RPL_DAG_MC_FLAG_R               0x1
+#define RPL_DAG_MC_FLAG_P 0x8
+#define RPL_DAG_MC_FLAG_C 0x4
+#define RPL_DAG_MC_FLAG_O 0x2
+#define RPL_DAG_MC_FLAG_R 0x1
 
 /* DAG Metric Container aggregation mode. */
-#define RPL_DAG_MC_AGGR_ADDITIVE        0
-#define RPL_DAG_MC_AGGR_MAXIMUM         1
-#define RPL_DAG_MC_AGGR_MINIMUM         2
-#define RPL_DAG_MC_AGGR_MULTIPLICATIVE  3
+#define RPL_DAG_MC_AGGR_ADDITIVE 0
+#define RPL_DAG_MC_AGGR_MAXIMUM 1
+#define RPL_DAG_MC_AGGR_MINIMUM 2
+#define RPL_DAG_MC_AGGR_MULTIPLICATIVE 3
 
 /* The bit index within the flags field of
    the rpl_metric_object_energy structure. */
-#define RPL_DAG_MC_ENERGY_INCLUDED	3
-#define RPL_DAG_MC_ENERGY_TYPE		1
-#define RPL_DAG_MC_ENERGY_ESTIMATION	0
+#define RPL_DAG_MC_ENERGY_INCLUDED 3
+#define RPL_DAG_MC_ENERGY_TYPE 1
+#define RPL_DAG_MC_ENERGY_ESTIMATION 0
 
-#define RPL_DAG_MC_ENERGY_TYPE_MAINS		0
-#define RPL_DAG_MC_ENERGY_TYPE_BATTERY		1
-#define RPL_DAG_MC_ENERGY_TYPE_SCAVENGING	2
+#define RPL_DAG_MC_ENERGY_TYPE_MAINS 0
+#define RPL_DAG_MC_ENERGY_TYPE_BATTERY 1
+#define RPL_DAG_MC_ENERGY_TYPE_SCAVENGING 2
 
-struct rpl_metric_object_energy {
+struct rpl_metric_object_energy
+{
   uint8_t flags;
   uint8_t energy_est;
 };
 
 /* Logical representation of a DAG Metric Container. */
-struct rpl_metric_container {
+struct rpl_metric_container
+{
   uint8_t type;
   uint8_t flags;
   uint8_t aggr;
   uint8_t prec;
   uint8_t length;
-  union metric_object {
+  union metric_object
+  {
     struct rpl_metric_object_energy energy;
     uint16_t etx;
     uint16_t hc;
@@ -106,10 +109,11 @@ typedef struct rpl_metric_container rpl_metric_container_t;
 struct rpl_instance;
 struct rpl_dag;
 /*---------------------------------------------------------------------------*/
-#define RPL_PARENT_FLAG_UPDATED           0x1
+#define RPL_PARENT_FLAG_UPDATED 0x1
 #define RPL_PARENT_FLAG_LINK_METRIC_VALID 0x2
 
-struct rpl_parent {
+struct rpl_parent
+{
   struct rpl_parent *next;
   struct rpl_dag *dag;
 #if RPL_DAG_MC != RPL_DAG_MC_NONE
@@ -123,7 +127,8 @@ struct rpl_parent {
 typedef struct rpl_parent rpl_parent_t;
 /*---------------------------------------------------------------------------*/
 /* RPL DIO prefix suboption */
-struct rpl_prefix {
+struct rpl_prefix
+{
   uip_ipaddr_t prefix;
   uint32_t lifetime;
   uint8_t length;
@@ -132,7 +137,8 @@ struct rpl_prefix {
 typedef struct rpl_prefix rpl_prefix_t;
 /*---------------------------------------------------------------------------*/
 /* Directed Acyclic Graph */
-struct rpl_dag {
+struct rpl_dag
+{
   uip_ipaddr_t dag_id;
   rpl_rank_t min_rank; /* should be reset per DAG iteration! */
   uint8_t version;
@@ -143,7 +149,6 @@ struct rpl_dag {
   uint8_t joined;
 
   uint8_t dag_size;
-  uint8_t hop_count;
 
   rpl_parent_t *preferred_parent;
   rpl_rank_t rank;
@@ -185,16 +190,17 @@ typedef struct rpl_instance rpl_instance_t;
  * update_metric_container(dag)
  *
  *  Updates the metric container for outgoing DIOs in a certain DAG.
- *  If the objective function of the DAG does not use metric containers, 
+ *  If the objective function of the DAG does not use metric containers,
  *  the function should set the object type to RPL_DAG_MC_NONE.
  */
-struct rpl_of {
+struct rpl_of
+{
   void (*reset)(struct rpl_dag *);
   void (*neighbor_link_callback)(rpl_parent_t *, int, int);
   rpl_parent_t *(*best_parent)(rpl_parent_t *, rpl_parent_t *);
   rpl_dag_t *(*best_dag)(rpl_dag_t *, rpl_dag_t *);
   rpl_rank_t (*calculate_rank)(rpl_parent_t *, rpl_rank_t);
-  void (*update_metric_container)( rpl_instance_t *);
+  void (*update_metric_container)(rpl_instance_t *);
   rpl_ocp_t ocp;
 };
 typedef struct rpl_of rpl_of_t;
@@ -203,7 +209,8 @@ typedef struct rpl_of rpl_of_t;
 extern rpl_of_t RPL_OF;
 /*---------------------------------------------------------------------------*/
 /* Instance */
-struct rpl_instance {
+struct rpl_instance
+{
   /* DAG configuration */
   rpl_metric_container_t mc;
   rpl_of_t *of;
@@ -229,7 +236,7 @@ struct rpl_instance {
   uint16_t dio_totint;
   uint16_t dio_totsend;
   uint16_t dio_totrecv;
-#endif /* RPL_CONF_STATS */
+#endif                         /* RPL_CONF_STATS */
   clock_time_t dio_next_delay; /* delay for completion of dio interval */
 #if RPL_WITH_PROBING
   struct ctimer probing_timer;
@@ -276,7 +283,8 @@ NBR_TABLE_DECLARE(rpl_parents);
  * data for other nodes, but are not reachable themselves. In leaf
  * mode, nodes do not forward data for others, but are reachable by
  * others. */
-enum rpl_mode {
+enum rpl_mode
+{
   RPL_MODE_MESH = 0,
   RPL_MODE_FEATHER = 1,
   RPL_MODE_LEAF = 2,
