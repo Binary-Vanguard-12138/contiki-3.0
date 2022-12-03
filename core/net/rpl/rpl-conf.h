@@ -45,9 +45,9 @@
 #define RPL_CONF_STATS 0
 #endif /* RPL_CONF_STATS */
 
-/* 
+/*
  * Select routing metric supported at runtime. This must be a valid
- * DAG Metric Container Object Type (see below). Currently, we only 
+ * DAG Metric Container Object Type (see below). Currently, we only
  * support RPL_DAG_MC_ETX and RPL_DAG_MC_ENERGY.
  * When MRHOF (RFC6719) is used with ETX, no metric container must
  * be used; instead the rank carries ETX directly.
@@ -55,12 +55,12 @@
 #ifdef RPL_CONF_DAG_MC
 #define RPL_DAG_MC RPL_CONF_DAG_MC
 #else
-#define RPL_DAG_MC RPL_DAG_MC_NONE
+#define RPL_DAG_MC RPL_DAG_MC_HOP
 #endif /* RPL_CONF_DAG_MC */
 
 /*
- * The objective function used by RPL is configurable through the 
- * RPL_CONF_OF parameter. This should be defined to be the name of an 
+ * The objective function used by RPL is configurable through the
+ * RPL_CONF_OF parameter. This should be defined to be the name of an
  * rpl_of object linked into the system image, e.g., rpl_of0.
  */
 #ifdef RPL_CONF_OF
@@ -74,7 +74,7 @@
 #ifdef RPL_CONF_DEFAULT_INSTANCE
 #define RPL_DEFAULT_INSTANCE RPL_CONF_DEFAULT_INSTANCE
 #else
-#define RPL_DEFAULT_INSTANCE	       0x1e
+#define RPL_DEFAULT_INSTANCE 0x1e
 #endif /* RPL_CONF_DEFAULT_INSTANCE */
 
 /*
@@ -91,18 +91,18 @@
  * Maximum of concurent RPL instances.
  */
 #ifdef RPL_CONF_MAX_INSTANCES
-#define RPL_MAX_INSTANCES     RPL_CONF_MAX_INSTANCES
+#define RPL_MAX_INSTANCES RPL_CONF_MAX_INSTANCES
 #else
-#define RPL_MAX_INSTANCES     1
+#define RPL_MAX_INSTANCES 1
 #endif /* RPL_CONF_MAX_INSTANCES */
 
 /*
  * Maximum number of DAGs within an instance.
  */
 #ifdef RPL_CONF_MAX_DAG_PER_INSTANCE
-#define RPL_MAX_DAG_PER_INSTANCE     RPL_CONF_MAX_DAG_PER_INSTANCE
+#define RPL_MAX_DAG_PER_INSTANCE RPL_CONF_MAX_DAG_PER_INSTANCE
 #else
-#define RPL_MAX_DAG_PER_INSTANCE     2
+#define RPL_MAX_DAG_PER_INSTANCE 2
 #endif /* RPL_CONF_MAX_DAG_PER_INSTANCE */
 
 /*
@@ -116,22 +116,22 @@
  * default route with infinite lifetime secures the upstream route.
  */
 #ifdef RPL_CONF_DEFAULT_ROUTE_INFINITE_LIFETIME
-#define RPL_DEFAULT_ROUTE_INFINITE_LIFETIME                    RPL_CONF_DEFAULT_ROUTE_INFINITE_LIFETIME
+#define RPL_DEFAULT_ROUTE_INFINITE_LIFETIME RPL_CONF_DEFAULT_ROUTE_INFINITE_LIFETIME
 #else
-#define RPL_DEFAULT_ROUTE_INFINITE_LIFETIME                    0
+#define RPL_DEFAULT_ROUTE_INFINITE_LIFETIME 0
 #endif /* RPL_CONF_DEFAULT_ROUTE_INFINITE_LIFETIME */
 
 /*
- * 
+ *
  */
 #ifndef RPL_CONF_DAO_SPECIFY_DAG
-  #if RPL_MAX_DAG_PER_INSTANCE > 1
-    #define RPL_DAO_SPECIFY_DAG 1
-  #else
-    #define RPL_DAO_SPECIFY_DAG 0
-  #endif /* RPL_MAX_DAG_PER_INSTANCE > 1 */
+#if RPL_MAX_DAG_PER_INSTANCE > 1
+#define RPL_DAO_SPECIFY_DAG 1
 #else
-  #define RPL_DAO_SPECIFY_DAG RPL_CONF_DAO_SPECIFY_DAG
+#define RPL_DAO_SPECIFY_DAG 0
+#endif /* RPL_MAX_DAG_PER_INSTANCE > 1 */
+#else
+#define RPL_DAO_SPECIFY_DAG RPL_CONF_DAO_SPECIFY_DAG
 #endif /* RPL_CONF_DAO_SPECIFY_DAG */
 
 /*
@@ -143,9 +143,9 @@
  * ContikiRPL thus sets the default to 2^12 ms = 4.096 s.
  */
 #ifdef RPL_CONF_DIO_INTERVAL_MIN
-#define RPL_DIO_INTERVAL_MIN        RPL_CONF_DIO_INTERVAL_MIN
+#define RPL_DIO_INTERVAL_MIN RPL_CONF_DIO_INTERVAL_MIN
 #else
-#define RPL_DIO_INTERVAL_MIN        12
+#define RPL_DIO_INTERVAL_MIN 12
 #endif
 
 /*
@@ -156,9 +156,9 @@
  * unsuitable when we start with a minimum interval of 2^12.
  */
 #ifdef RPL_CONF_DIO_INTERVAL_DOUBLINGS
-#define RPL_DIO_INTERVAL_DOUBLINGS  RPL_CONF_DIO_INTERVAL_DOUBLINGS
+#define RPL_DIO_INTERVAL_DOUBLINGS RPL_CONF_DIO_INTERVAL_DOUBLINGS
 #else
-#define RPL_DIO_INTERVAL_DOUBLINGS  8
+#define RPL_DIO_INTERVAL_DOUBLINGS 8
 #endif
 
 /*
@@ -169,18 +169,18 @@
  * operation by tuning this parameter for specific deployments.
  */
 #ifdef RPL_CONF_DIO_REDUNDANCY
-#define RPL_DIO_REDUNDANCY          RPL_CONF_DIO_REDUNDANCY
+#define RPL_DIO_REDUNDANCY RPL_CONF_DIO_REDUNDANCY
 #else
-#define RPL_DIO_REDUNDANCY          10
+#define RPL_DIO_REDUNDANCY 10
 #endif
 
 /*
  * Initial metric attributed to a link when the ETX is unknown
  */
 #ifndef RPL_CONF_INIT_LINK_METRIC
-#define RPL_INIT_LINK_METRIC        2
+#define RPL_INIT_LINK_METRIC 2
 #else
-#define RPL_INIT_LINK_METRIC        RPL_CONF_INIT_LINK_METRIC
+#define RPL_INIT_LINK_METRIC RPL_CONF_INIT_LINK_METRIC
 #endif
 
 /*
@@ -188,27 +188,27 @@
  * used in RPL lifetime values, in seconds.
  */
 #ifndef RPL_CONF_DEFAULT_LIFETIME_UNIT
-#define RPL_DEFAULT_LIFETIME_UNIT       0xffff
+#define RPL_DEFAULT_LIFETIME_UNIT 0xffff
 #else
-#define RPL_DEFAULT_LIFETIME_UNIT       RPL_CONF_DEFAULT_LIFETIME_UNIT
+#define RPL_DEFAULT_LIFETIME_UNIT RPL_CONF_DEFAULT_LIFETIME_UNIT
 #endif
 
 /*
  * Default route lifetime as a multiple of the lifetime unit.
  */
 #ifndef RPL_CONF_DEFAULT_LIFETIME
-#define RPL_DEFAULT_LIFETIME            0xff
+#define RPL_DEFAULT_LIFETIME 0xff
 #else
-#define RPL_DEFAULT_LIFETIME            RPL_CONF_DEFAULT_LIFETIME
+#define RPL_DEFAULT_LIFETIME RPL_CONF_DEFAULT_LIFETIME
 #endif
 
 /*
  * DAG preference field
  */
 #ifdef RPL_CONF_PREFERENCE
-#define RPL_PREFERENCE              RPL_CONF_PREFERENCE
+#define RPL_PREFERENCE RPL_CONF_PREFERENCE
 #else
-#define RPL_PREFERENCE              0
+#define RPL_PREFERENCE 0
 #endif
 
 /*
@@ -218,9 +218,9 @@
  * header are still processed and forwarded.
  */
 #ifdef RPL_CONF_INSERT_HBH_OPTION
-#define RPL_INSERT_HBH_OPTION       RPL_CONF_INSERT_HBH_OPTION
+#define RPL_INSERT_HBH_OPTION RPL_CONF_INSERT_HBH_OPTION
 #else
-#define RPL_INSERT_HBH_OPTION       1
+#define RPL_INSERT_HBH_OPTION 1
 #endif
 
 /*
@@ -280,8 +280,7 @@
 #ifdef RPL_CONF_PROBING_DELAY_FUNC
 #define RPL_PROBING_DELAY_FUNC RPL_CONF_PROBING_DELAY_FUNC
 #else
-#define RPL_PROBING_DELAY_FUNC() ((RPL_PROBING_INTERVAL / 2) \
-    + random_rand() % (RPL_PROBING_INTERVAL))
+#define RPL_PROBING_DELAY_FUNC() ((RPL_PROBING_INTERVAL / 2) + random_rand() % (RPL_PROBING_INTERVAL))
 #endif
 
 #endif /* RPL_CONF_H */

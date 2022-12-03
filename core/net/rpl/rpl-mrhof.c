@@ -60,34 +60,33 @@ static rpl_rank_t calculate_rank(rpl_parent_t *, rpl_rank_t);
 static void update_metric_container(rpl_instance_t *);
 
 rpl_of_t rpl_mrhof = {
-  reset,
-  neighbor_link_callback,
-  best_parent,
-  best_dag,
-  calculate_rank,
-  update_metric_container,
-  1
-};
+    reset,
+    neighbor_link_callback,
+    best_parent,
+    best_dag,
+    calculate_rank,
+    update_metric_container,
+    1};
 
 /* Constants for the ETX moving average */
-#define ETX_SCALE   100
-#define ETX_ALPHA   90
+#define ETX_SCALE 100
+#define ETX_ALPHA 90
 
 /* Reject parents that have a higher link metric than the following. */
-#define MAX_LINK_METRIC			10
+#define MAX_LINK_METRIC 10
 
 /* Reject parents that have a higher path cost than the following. */
-#define MAX_PATH_COST			100
+#define MAX_PATH_COST 100
 
-#define DAG_SIZE_WEIGHT   10
-#define HOP_COUNT_WEIGHT  5
-#define RANK_WEIGHT       85
+#define DAG_SIZE_WEIGHT 10
+#define HOP_COUNT_WEIGHT 5
+#define RANK_WEIGHT 85
 
 /*
  * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
  * to switch preferred parent.
  */
-#define PARENT_SWITCH_THRESHOLD_DIV	2
+#define PARENT_SWITCH_THRESHOLD_DIV 2
 
 typedef uint16_t rpl_path_metric_t;
 
@@ -95,11 +94,13 @@ static rpl_path_metric_t
 calculate_path_metric(rpl_parent_t *p)
 {
   uip_ds6_nbr_t *nbr;
-  if(p == NULL) {
+  if (p == NULL)
+  {
     return MAX_PATH_COST * RPL_DAG_MC_ETX_DIVISOR;
   }
   nbr = rpl_get_nbr(p);
-  if(nbr == NULL) {
+  if (nbr == NULL)
+  {
     return MAX_PATH_COST * RPL_DAG_MC_ETX_DIVISOR;
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
@@ -107,9 +108,13 @@ calculate_path_metric(rpl_parent_t *p)
     return p->rank + (uint16_t)nbr->link_metric;
   }
 #elif RPL_DAG_MC == RPL_DAG_MC_ETX
+  printf("ETX %u +1 \n", p->mc.obj.hc);
   return p->mc.obj.etx + (uint16_t)nbr->link_metric;
 #elif RPL_DAG_MC == RPL_DAG_MC_ENERGY
   return p->mc.obj.energy.energy_est + (uint16_t)nbr->link_metric;
+#elif RPL_DAG_MC == RPL_DAG_MC_HOP
+  printf("Hop count to the root %u \n", p->mc.obj.hc);
+  return p->mc.obj.hc + 1;
 #else
 #error "Unsupported RPL_DAG_MC configured. See rpl.h."
 #endif /* RPL_DAG_MC */
@@ -130,7 +135,8 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   uip_ds6_nbr_t *nbr = NULL;
 
   nbr = rpl_get_nbr(p);
-  if(nbr == NULL) {
+  if (nbr == NULL)
+  {
     /* No neighbor for this parent - something bad has occurred */
     return;
   }
@@ -138,16 +144,22 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   recorded_etx = nbr->link_metric;
 
   /* Do not penalize the ETX when collisions or transmission errors occur. */
-  if(status == MAC_TX_OK || status == MAC_TX_NOACK) {
-    if(status == MAC_TX_NOACK) {
+  if (status == MAC_TX_OK || status == MAC_TX_NOACK)
+  {
+    if (status == MAC_TX_NOACK)
+    {
       packet_etx = MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
     }
 
-    if(p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID) {
+    if (p->flags & RPL_PARENT_FLAG_LINK_METRIC_VALID)
+    {
       /* We already have a valid link metric, use weighted moving average to update it */
       new_etx = ((uint32_t)recorded_etx * ETX_ALPHA +
-                 (uint32_t)packet_etx * (ETX_SCALE - ETX_ALPHA)) / ETX_SCALE;
-    } else {
+                 (uint32_t)packet_etx * (ETX_SCALE - ETX_ALPHA)) /
+                ETX_SCALE;
+    }
+    else
+    {
       /* We don't have a valid link metric, set it to the current packet's ETX */
       new_etx = packet_etx;
       /* Set link metric as valid */
@@ -155,9 +167,9 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
     }
 
     PRINTF("RPL: ETX changed from %u to %u (packet ETX = %u)\n",
-        (unsigned)(recorded_etx / RPL_DAG_MC_ETX_DIVISOR),
-        (unsigned)(new_etx  / RPL_DAG_MC_ETX_DIVISOR),
-        (unsigned)(packet_etx / RPL_DAG_MC_ETX_DIVISOR));
+           (unsigned)(recorded_etx / RPL_DAG_MC_ETX_DIVISOR),
+           (unsigned)(new_etx / RPL_DAG_MC_ETX_DIVISOR),
+           (unsigned)(packet_etx / RPL_DAG_MC_ETX_DIVISOR));
     /* update the link metric for this nbr */
     nbr->link_metric = new_etx;
   }
@@ -170,24 +182,32 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
   rpl_rank_t rank_increase;
   uip_ds6_nbr_t *nbr;
 
-  if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
-    if(base_rank == 0) {
+  if (p == NULL || (nbr = rpl_get_nbr(p)) == NULL)
+  {
+    if (base_rank == 0)
+    {
       return INFINITE_RANK;
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-  } else {
+  }
+  else
+  {
     rank_increase = nbr->link_metric;
-    if(base_rank == 0) {
+    if (base_rank == 0)
+    {
       base_rank = p->rank;
     }
   }
 
-  if(INFINITE_RANK - base_rank < rank_increase) {
+  if (INFINITE_RANK - base_rank < rank_increase)
+  {
     /* Reached the maximum rank. */
     new_rank = INFINITE_RANK;
-  } else {
-   /* Calculate the rank based on the new rank information from DIO or
-      stored otherwise. */
+  }
+  else
+  {
+    /* Calculate the rank based on the new rank information from DIO or
+       stored otherwise. */
     new_rank = base_rank + rank_increase;
   }
 
@@ -197,21 +217,19 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 static rpl_dag_t *
 best_dag(rpl_dag_t *d1, rpl_dag_t *d2)
 {
-  if(d1->grounded != d2->grounded) {
+  if (d1->grounded != d2->grounded)
+  {
     return d1->grounded ? d1 : d2;
   }
 
-  if(d1->preference != d2->preference) {
+  if (d1->preference != d2->preference)
+  {
     return d1->preference > d2->preference ? d1 : d2;
   }
 
-  uint32_t Q1 = d1->dag_size * DAG_SIZE_WEIGHT
-    + d1->hop_count * HOP_COUNT_WEIGHT
-    + d1->rank * RANK_WEIGHT;
+  uint32_t Q1 = d1->dag_size * DAG_SIZE_WEIGHT + d1->hop_count * HOP_COUNT_WEIGHT + d1->rank * RANK_WEIGHT;
 
-  uint32_t Q2 = d2->dag_size * DAG_SIZE_WEIGHT
-    + d2->hop_count * HOP_COUNT_WEIGHT
-    + d2->rank * RANK_WEIGHT;
+  uint32_t Q2 = d2->dag_size * DAG_SIZE_WEIGHT + d2->hop_count * HOP_COUNT_WEIGHT + d2->rank * RANK_WEIGHT;
 
   return Q1 < Q2 ? d1 : d2;
 }
@@ -233,9 +251,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   p2_metric = calculate_path_metric(p2);
 
   /* Maintain stability of the preferred parent in case of similar ranks. */
-  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-    if(p1_metric < p2_metric + min_diff &&
-       p1_metric > p2_metric - min_diff) {
+  if (p1 == dag->preferred_parent || p2 == dag->preferred_parent)
+  {
+    if (p1_metric < p2_metric + min_diff &&
+        p1_metric > p2_metric - min_diff)
+    {
       PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
              p2_metric - min_diff,
              p1_metric,
@@ -270,14 +290,18 @@ update_metric_container(rpl_instance_t *instance)
 
   dag = instance->current_dag;
 
-  if (!dag->joined) {
+  if (!dag->joined)
+  {
     PRINTF("RPL: Cannot update the metric container when not joined\n");
     return;
   }
 
-  if(dag->rank == ROOT_RANK(instance)) {
+  if (dag->rank == ROOT_RANK(instance))
+  {
     path_metric = 0;
-  } else {
+  }
+  else
+  {
     path_metric = calculate_path_metric(dag->preferred_parent);
   }
 
@@ -286,20 +310,26 @@ update_metric_container(rpl_instance_t *instance)
   instance->mc.obj.etx = path_metric;
 
   PRINTF("RPL: My path ETX to the root is %u.%u\n",
-	instance->mc.obj.etx / RPL_DAG_MC_ETX_DIVISOR,
-	(instance->mc.obj.etx % RPL_DAG_MC_ETX_DIVISOR * 100) /
-	 RPL_DAG_MC_ETX_DIVISOR);
+         instance->mc.obj.etx / RPL_DAG_MC_ETX_DIVISOR,
+         (instance->mc.obj.etx % RPL_DAG_MC_ETX_DIVISOR * 100) /
+             RPL_DAG_MC_ETX_DIVISOR);
 #elif RPL_DAG_MC == RPL_DAG_MC_ENERGY
   instance->mc.length = sizeof(instance->mc.obj.energy);
 
-  if(dag->rank == ROOT_RANK(instance)) {
+  if (dag->rank == ROOT_RANK(instance))
+  {
     type = RPL_DAG_MC_ENERGY_TYPE_MAINS;
-  } else {
+  }
+  else
+  {
     type = RPL_DAG_MC_ENERGY_TYPE_BATTERY;
   }
 
   instance->mc.obj.energy.flags = type << RPL_DAG_MC_ENERGY_TYPE;
   instance->mc.obj.energy.energy_est = path_metric;
+#elif RPL_DAG_MC == RPL_DAG_MC_HOP
+  instance->mc.length = sizeof(instance->mc.obj.hc);
+  instance->mc.obj.hc = path_metric;
 #endif /* RPL_DAG_MC == RPL_DAG_MC_ETX */
 }
 #endif /* RPL_DAG_MC == RPL_DAG_MC_NONE */

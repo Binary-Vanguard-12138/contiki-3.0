@@ -369,6 +369,10 @@ dio_input(void)
         dio.mc.obj.energy.flags = buffer[i + 6];
         dio.mc.obj.energy.energy_est = buffer[i + 7];
       }
+      else if (dio.mc.type == RPL_DAG_MC_HOP)
+      {
+        dio.mc.obj.hc = get32(buffer, i + 6);
+      }
       else
       {
         PRINTF("RPL: Unhandled DAG MC type: %u\n", (unsigned)dio.mc.type);
@@ -536,7 +540,8 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     instance->of->update_metric_container(instance);
 
     buffer[pos++] = RPL_OPTION_DAG_METRIC_CONTAINER;
-    buffer[pos++] = 6;
+    // buffer[pos++] = 8;
+    buffer[pos++] = (instance->mc.type == RPL_DAG_MC_HOP ? 8 : 6);
     buffer[pos++] = instance->mc.type;
     buffer[pos++] = instance->mc.flags >> 1;
     buffer[pos] = (instance->mc.flags & 1) << 7;
@@ -552,6 +557,12 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
       buffer[pos++] = 2;
       buffer[pos++] = instance->mc.obj.energy.flags;
       buffer[pos++] = instance->mc.obj.energy.energy_est;
+    }
+    else if (instance->mc.type == RPL_DAG_MC_HOP)
+    {
+      buffer[pos++] = 8;
+      set32(buffer, pos, instance->mc.obj.hc);
+      pos += 4;
     }
     else
     {

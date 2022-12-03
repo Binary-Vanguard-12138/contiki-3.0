@@ -59,6 +59,7 @@ typedef uint16_t rpl_ocp_t;
 #define RPL_DAG_MC_LQL                  6 /* Link Quality Level */
 #define RPL_DAG_MC_ETX                  7 /* Expected Transmission Count */
 #define RPL_DAG_MC_LC                   8 /* Link Color */
+#define RPL_DAG_MC_HOP                  9 /* Hop Count */
 
 /* DAG Metric Container flags. */
 #define RPL_DAG_MC_FLAG_P               0x8
@@ -97,6 +98,7 @@ struct rpl_metric_container {
   union metric_object {
     struct rpl_metric_object_energy energy;
     uint16_t etx;
+    uint16_t hc;
   } obj;
 };
 typedef struct rpl_metric_container rpl_metric_container_t;
