@@ -540,7 +540,6 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     instance->of->update_metric_container(instance);
 
     buffer[pos++] = RPL_OPTION_DAG_METRIC_CONTAINER;
-    // buffer[pos++] = 8;
     buffer[pos++] = (instance->mc.type == RPL_DAG_MC_HOP ? 8 : 6);
     buffer[pos++] = instance->mc.type;
     buffer[pos++] = instance->mc.flags >> 1;
