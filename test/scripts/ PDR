@@ -1,0 +1,77 @@
+
+load("nashorn:mozilla_compat.js");
+importPackage(java.io);
+
+TIMEOUT(3690000);
+numnode = 102;
+TIME_OUT_FINALIZE = 3600000;
+
+output8 = new Object();
+IndRplStatsDescfile= "1rpl_stats_ind.dat";
+
+/* RPL control messages */
+app_sent = new Array(); app_recv = new Array();
+all_app_sent = 0; all_app_recv = 0;
+
+for (i = 1; i <= numnode; i++) {
+app_sent[i] = 0; app_recv[i] = 0;
+}
+while (true) {
+if (!output8[IndRplStatsDescfile]) {
+output8[IndRplStatsDescfile] = new FileWriter(IndRplStatsDescfile);
+slinetowrite = "#send  recv  pdr" + "\n";
+output8[IndRplStatsDescfile].write(slinetowrite);
+}
+try {
+YIELD();
+} catch (e) {
+output8[IndRplStatsDescfile].close();
+throw ('test script killed');
+}
+if ((!msg.contains("app_send:")) && (!msg.contains("app_recv:")))
+{continue};
+
+log.log(msg + "\n");
+if (msg.startsWith("app_send:")) {
+app_sent[id]++;
+}
+if (msg.startsWith("app_recv:")) {
+app_recv[id]++;
+}
+   
+if (sim.getSimulationTimeMillis() > TIME_OUT_FINALIZE) {
+print_individual_stats_end();
+output8[IndRplStatsDescfile].close();
+SCRIPT_TIMEOUT();
+}
+}
+function print_individual_stats_end() {
+log.log("indrplstatsdescfile : \n" ) ;
+slinetowrite= "#send  recv  pdr "+ "\n";
+log.log(slinetowrite);  
+for (i = 1; i <= numnode; i++) {
+all_app_sent += app_sent[i];
+all_app_recv += app_recv[i];
+}
+writeinfile =  all_app_sent      + "   " + all_app_recv  +"\n"
+output8[IndRplStatsDescfile].write(writeinfile);
+log.log(writeinfile);
+}
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+

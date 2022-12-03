@@ -1,0 +1,100 @@
+TIMEOUT(3600000, log.log("Total Delay" + totaldelay + "\n"));
+
+
+
+nodeCount = 102;
+
+
+//timeReceived= new Array();
+
+//timeSent = new Array();
+
+delay = new Array();
+
+for(i = 0; i < ( nodeCount-1); i++) {
+
+
+timeReceived= 0.0;
+
+timeSent= 0.0;
+
+delay = 0.0;
+
+totaldelay = 0;
+
+}
+
+while(1) {
+
+YIELD();
+
+msgArray = msg.split(' ');
+
+// log.log("string: "+msgArray+"\n");
+
+
+if(msgArray[0].equals("app_recv:")) {
+
+// Received packet
+
+senderID = parseInt(msgArray[1]);
+
+
+timeReceived = time;
+
+log.log("\n" + " SenderID " + senderID + "timeReceived" +  timeReceived+ " timeSent" + timeSent + "\n");
+
+
+
+
+count1 = 0;
+
+
+
+
+
+    if (timeReceived > 0) {
+
+        delay = timeReceived - timeSent;
+log.log("Delay" + delay + "\n");
+       
+
+
+        if (delay > 0) 
+        {
+           
+              totaldelay = totaldelay + delay;
+
+            count1++; }
+
+
+
+}
+
+
+//total_simulation_time=time;
+//log.log("\n"+"Total simulation time"+total_simulation_time+"\n");
+log.log("total Delay" + totaldelay + "\n");
+
+}
+if(msgArray[0].equals("app_send:")) {
+
+// Sent packet
+receiverID = parseInt(msgArray[1]);
+
+
+timeSent= time;
+
+log.log( "\n" +  " timeSent[id] " + timeSent +  " id " + receiverID + "\n");
+
+
+}
+
+
+
+} 
+
+
+
+
+

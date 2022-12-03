@@ -1,0 +1,62 @@
+
+load("nashorn:mozilla_compat.js");
+importPackage(java.io);
+
+TIMEOUT(110000);
+numnode = 6;
+TIME_OUT_FINALIZE = 100000;
+
+output8 = new Object();
+IndRplStatsDescfile= "1rpl_stats_ind.dat";
+
+/* RPL control messages */
+dio_sent = new Array(); dao_sent = new Array(); dis_sent = new Array();
+all_dio_sent = 0; all_dao_sent = 0; all_dis_sent = 0; all_rpl_msgs = 0;  
+
+for (i = 1; i <= numnode; i++) {
+dio_sent[i] = 0; dao_sent[i] = 0; dis_sent[i] = 0;  
+}
+while (true) {
+if (!output8[IndRplStatsDescfile]) {
+output8[IndRplStatsDescfile] = new FileWriter(IndRplStatsDescfile);
+slinetowrite = "#Time:    id   dia   dao   dis" + "\n";
+output8[IndRplStatsDescfile].write(slinetowrite);
+}
+try {
+YIELD();
+} catch (e) {
+output8[IndRplStatsDescfile].close();
+throw ('test script killed');
+}
+if ((!msg.contains("rpl_dio:")) && (!msg.contains("rpl_dao:")) && (!msg.contains("rpl_dis:")))
+{continue};
+
+log.log(msg + "\n");
+if (msg.startsWith("rpl_dio:")) {
+dio_sent[id]++;
+}
+if (msg.startsWith("rpl_dao:")) {
+dao_sent[id]++;
+}
+if (msg.startsWith("rpl_dis:")) {
+dis_sent[id]++;
+}
+   
+if (sim.getSimulationTimeMillis() > TIME_OUT_FINALIZE) {
+print_individual_stats_end();
+output8[IndRplStatsDescfile].close();
+SCRIPT_TIMEOUT();
+}
+}
+function print_individual_stats_end() {
+log.log("indrplstatsdescfile : \n" ) ;
+slinetowrite= "#T :         ID       DIO     DAO        DIS "+ "\n";
+log.log(slinetowrite);  
+for (i = 1; i <= numnode; i++) {
+    writeinfile =  i + "   " + dio_sent[i]       + "   " + dao_sent[i]    + "   " + dis_sent[i]+"\n"
+    output8[IndRplStatsDescfile].write(writeinfile);
+    log.log(writeinfile);
+}
+}
+	
+
