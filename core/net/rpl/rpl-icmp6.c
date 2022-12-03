@@ -406,6 +406,19 @@ dio_input(void)
       PRINTF("RPL: Copying prefix information\n");
       memcpy(&dio.prefix_info.prefix, &buffer[i + 16], 16);
       break;
+
+      case RPL_OPTION_STABILITY:
+      if(len > 4) {
+         printf("RPL: Invalid stability option, len > 4\n");
+         RPL_STAT(rpl_stats.malformed_msgs++);
+      return;
+      
+      }
+      dio.dag_size = buffer[i+2];
+      printf( "RPL: dio recieved with stability option dag_size=%u \n" ,dio.dag_size);
+      break;
+
+
     default:
       PRINTF("RPL: Unsupported suboption type in DIO: %u\n",
 	(unsigned)subopt_type);
@@ -546,6 +559,17 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     PRINTF("RPL: No prefix to announce (len %d)\n",
            dag->prefix_info.length);
   }
+
+buffer[pos++] = RPL_OPTION_STABILITY;
+ buffer[pos++] = 2;
+ if(dag->rank == ROOT_RANK(instance)) {
+ dag-> dag_size = uip_ds6_route_num_routes();
+}
+buffer[pos] = dag->dag_size;
+printf("RPL: stability option with dag_size=%u \n", buffer[pos]);
+
+
+
 
 #if RPL_LEAF_ONLY
 #if (DEBUG) & DEBUG_PRINT

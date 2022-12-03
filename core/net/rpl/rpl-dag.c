@@ -333,6 +333,9 @@ rpl_set_root(uint8_t instance_id, uip_ipaddr_t *dag_id)
   instance->of = &RPL_OF;
   rpl_set_preferred_parent(dag, NULL);
 
+  dag->dag_size = uip_ds6_route_num_routes();
+
+
   memcpy(&dag->dag_id, dag_id, sizeof(dag->dag_id));
 
   instance->dio_intdoubl = RPL_DIO_INTERVAL_DOUBLINGS;
@@ -980,6 +983,8 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   dag->grounded = dio->grounded;
   dag->version = dio->version;
 
+  dag->dag_size = dio->dag_size;
+  
   instance->of = of;
   instance->mop = dio->mop;
   instance->current_dag = dag;
@@ -1086,6 +1091,8 @@ rpl_add_dag(uip_ipaddr_t *from, rpl_dio_t *dio)
   dag->grounded = dio->grounded;
   dag->preference = dio->preference;
   dag->version = dio->version;
+
+  dag->dag_size = dio->dag_size;
 
   memcpy(&dag->dag_id, &dio->dag_id, sizeof(dio->dag_id));
 
@@ -1374,6 +1381,14 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
       p->rank=dio->rank;
     }
   }
+
+  if( p->rank == dio->rank && p == dag->preferred_parent){
+         if( dag->dag_size != dio->dag_size){
+  dag->dag_size = dio->dag_size;
+ }
+}
+
+
 
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;

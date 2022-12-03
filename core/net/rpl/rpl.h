@@ -139,6 +139,9 @@ struct rpl_dag {
   uint8_t used;
   /* live data for the DAG */
   uint8_t joined;
+
+  uint8_t dag_size;
+  
   rpl_parent_t *preferred_parent;
   rpl_rank_t rank;
   struct rpl_instance *instance;

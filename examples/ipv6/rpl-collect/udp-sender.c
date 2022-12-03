@@ -73,16 +73,16 @@ collect_common_net_print(void)
   /* Let's suppose we have only one instance */
   dag = rpl_get_any_dag();
   if(dag->preferred_parent != NULL) {
-    PRINTF("Preferred parent: ");
+    printf("Preferred parent: ");
     PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
-    PRINTF("\n");
+    printf("\n");
   }
   for(r = uip_ds6_route_head();
       r != NULL;
       r = uip_ds6_route_next(r)) {
     PRINT6ADDR(&r->ipaddr);
   }
-  PRINTF("---\n");
+  printf("---\n");
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -175,13 +175,13 @@ print_local_addresses(void)
   int i;
   uint8_t state;
 
-  PRINTF("Client IPv6 addresses: ");
+  printf("Client IPv6 grezly addresses: ");
   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
     state = uip_ds6_if.addr_list[i].state;
     if(uip_ds6_if.addr_list[i].isused &&
        (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
       PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
-      PRINTF("\n");
+      printf("\n");
       /* hack to make address "final" */
       if (state == ADDR_TENTATIVE) {
         uip_ds6_if.addr_list[i].state = ADDR_PREFERRED;
@@ -212,7 +212,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   set_global_address();
 
-  PRINTF("UDP client process started\n");
+  printf("UDP client process started\n");
 
   print_local_addresses();
 
@@ -220,9 +220,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
   client_conn = udp_new(NULL, UIP_HTONS(UDP_SERVER_PORT), NULL);
   udp_bind(client_conn, UIP_HTONS(UDP_CLIENT_PORT));
 
-  PRINTF("Created a connection with the server ");
+  printf("Created a connection with the server ");
   PRINT6ADDR(&client_conn->ripaddr);
-  PRINTF(" local/remote port %u/%u\n",
+  printf(" local/remote port %u/%u\n",
         UIP_HTONS(client_conn->lport), UIP_HTONS(client_conn->rport));
 
   while(1) {
