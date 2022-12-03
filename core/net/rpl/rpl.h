@@ -141,7 +141,8 @@ struct rpl_dag {
   uint8_t joined;
 
   uint8_t dag_size;
-  
+  uint8_t hop_count;
+
   rpl_parent_t *preferred_parent;
   rpl_rank_t rank;
   struct rpl_instance *instance;

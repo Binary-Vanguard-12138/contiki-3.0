@@ -79,6 +79,10 @@ rpl_of_t rpl_mrhof = {
 /* Reject parents that have a higher path cost than the following. */
 #define MAX_PATH_COST			100
 
+#define DAG_SIZE_WEIGHT   10
+#define HOP_COUNT_WEIGHT  5
+#define RANK_WEIGHT       85
+
 /*
  * The rank must differ more than 1/PARENT_SWITCH_THRESHOLD_DIV in order
  * to switch preferred parent.
@@ -201,7 +205,15 @@ best_dag(rpl_dag_t *d1, rpl_dag_t *d2)
     return d1->preference > d2->preference ? d1 : d2;
   }
 
-  return d1->rank < d2->rank ? d1 : d2;
+  uint32_t Q1 = d1->dag_size * DAG_SIZE_WEIGHT
+    + d1->hop_count * HOP_COUNT_WEIGHT
+    + d1->rank * RANK_WEIGHT;
+
+  uint32_t Q2 = d2->dag_size * DAG_SIZE_WEIGHT
+    + d2->hop_count * HOP_COUNT_WEIGHT
+    + d2->rank * RANK_WEIGHT;
+
+  return Q1 < Q2 ? d1 : d2;
 }
 
 static rpl_parent_t *

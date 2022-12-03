@@ -228,6 +228,7 @@ struct rpl_dio {
   uint8_t default_lifetime;
 
   uint8_t dag_size;
+  uint8_t hop_count;
 
 
   uint16_t lifetime_unit;
