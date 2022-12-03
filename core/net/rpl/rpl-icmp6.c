@@ -448,14 +448,15 @@ dio_input(void)
       break;
 
     case RPL_OPTION_STABILITY:
-      if (len > 4)
+      if (len > 5)
       {
-        printf("RPL: Invalid stability option, len > 4\n");
+        printf("RPL: Invalid stability option, len > 5\n");
         RPL_STAT(rpl_stats.malformed_msgs++);
         return;
       }
       dio.dag_size = buffer[i + 2];
-      printf("RPL: dio recieved with stability option dag_size=%u \n", dio.dag_size);
+      dio.hop_count = buffer[i + 3];
+      printf("RPL: dio recieved with stability option dag_size=%u, hop_count=%u\n", dio.dag_size, dio.hop_count);
       break;
 
     default:
@@ -622,7 +623,8 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     buffer[pos++] = 1;
     dag->dag_size = uip_ds6_route_num_routes();
     buffer[pos++] = dag->dag_size;
-    printf("RPL: stability option with dag_size=%u \n", buffer[pos - 1]);
+    buffer[pos++] = dag->hop_count;
+    printf("RPL: stability option with dag_size=%u, hop_count=%u \n", buffer[pos - 2], buffer[pos - 1]);
   }
 
 #if RPL_LEAF_ONLY
