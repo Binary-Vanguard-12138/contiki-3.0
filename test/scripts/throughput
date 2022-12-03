@@ -1,4 +1,4 @@
-TIMEOUT(300000, log.log(“Total PRR ” + totalPRR + “\n”));packetsReceived= new Array();packetsSent = new Array();serverID = 1;
+TIMEOUT(300000, log.log("Total PRR " + totalPRR + "\n"));packetsReceived= new Array();packetsSent = new Array();serverID = 1;
 
 nodeCount = 31;
 
@@ -20,9 +20,9 @@ while(1) {
 
 YIELD();
 
-msgArray = msg.split(‘ ‘);
+msgArray = msg.split(' ');
 
-if(msgArray[0].equals(“DATA”)) {
+if(msgArray[0].equals("DATA")) {
 
 if(msgArray.length == 9) {
 
@@ -32,7 +32,7 @@ senderID = parseInt(msgArray[8]);
 
 packetsReceived[senderID]++;
 
-log.log(“SenderID ” + senderID + ” PRR ” + packetsReceived[senderID] / packetsSent[senderID] + “\n”);
+log.log("SenderID " + senderID + " PRR " + packetsReceived[senderID] / packetsSent[senderID] + "\n");
 
 totalReceived = totalSent = 0;
 
@@ -48,7 +48,7 @@ totalPRR = totalReceived / totalSent;
 
 throughput = (totalReceived * data_length * 8) / total_simulation_time;
 
-log.log(“Total PRR ” + totalPRR + ” recv ” + totalReceived + ” sent ” + totalSent + ” Throughput ” + throughput + “\n”);
+log.log("Total PRR " + totalPRR + " recv " + totalReceived + " sent " + totalSent + " Throughput " + throughput + "\n");
 
 } else if(msgArray.length == 6) {
 
@@ -56,7 +56,7 @@ log.log(“Total PRR ” + totalPRR + ” recv ” + totalReceived + ” sent �
 
 packetsSent[id]++;
 
-log.log(” IIIID ” + id + ” packetsSent[id] ” + packetsSent[id] + “\n”);
+log.log(" IIIID " + id + " packetsSent[id] " + packetsSent[id] + "\n");
 
 }
 

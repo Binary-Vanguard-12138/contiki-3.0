@@ -1,4 +1,4 @@
-TIMEOUT(300000, log.log(“Total PRR ” + totalPRR + “\n”));packetsReceived= new Array();packetsSent = new Array();
+TIMEOUT(300000, log.log("Total PRR " + totalPRR + "\n"));packetsReceived= new Array();packetsSent = new Array();
 
 serverID = 1;
 
@@ -18,9 +18,9 @@ while(1) {
 
 YIELD();
 
-msgArray = msg.split(‘ ‘);
+msgArray = msg.split(' ');
 
-if(msgArray[0].equals(“DATA”)) {
+if(msgArray[0].equals("DATA")) {
 
 if(msgArray.length == 9) {
 
@@ -30,7 +30,7 @@ senderID = parseInt(msgArray[8]);
 
 packetsReceived[senderID]++;
 
-log.log(“SenderID ” + senderID + ” PRR ” + packetsReceived[senderID] / packetsSent[senderID] + “\n”);
+log.log("SenderID " + senderID + " PRR " + packetsReceived[senderID] / packetsSent[senderID] + "\n");
 
 totalReceived = totalSent = 0;
 

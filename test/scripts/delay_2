@@ -1,4 +1,4 @@
-TIMEOUT(300000, log.log(“Total PRR ” + totalPRR + “\n”));
+TIMEOUT(300000, log.log("Total PRR " + totalPRR + "\n"));
 
 packetsReceived= new Array();
 
@@ -42,9 +42,9 @@ while(1) {
 
 YIELD();
 
-msgArray = msg.split(‘ ‘);
+msgArray = msg.split(' ');
 
-if(msgArray[0].equals(“DATA”)) {
+if(msgArray[0].equals("DATA")) {
 
 if(msgArray.length == 9) {
 
@@ -56,7 +56,7 @@ packetsReceived[senderID]++;
 
 timeReceived[senderID] = time;
 
-log.log(“\n” + ” SenderID ” + senderID + ” PRR ” + packetsReceived[senderID] / packetsSent[senderID] + “timeReceived[senderID]” +  timeReceived[senderID] + ” timeSent[senderID] ” + timeSent[senderID] + “\n”);
+log.log("\n" + " SenderID " + senderID + " PRR " + packetsReceived[senderID] / packetsSent[senderID] + "timeReceived[senderID]" +  timeReceived[senderID] + " timeSent[senderID] " + timeSent[senderID] + "\n");
 
 totalReceived = totalSent = 0;
 
@@ -76,7 +76,7 @@ delay[i] = timeReceived[i] – timeSent[i];
 
 delay[i] = delay[i] / 10000000 ;
 
-//   log.log(“\n” + ” delay[i] ” + delay[i] + ” iiii ” + i + “\n”);
+//   log.log("\n" + " delay[i] " + delay[i] + " iiii " + i + "\n");
 
 if (delay[i] > 0) {
 
@@ -98,7 +98,7 @@ t_total = totalPRR * 100 ;
 
  
 
-log.log(“\n” + ” Total_delay ” + totaldelay + “\n”);
+log.log("\n" + " Total_delay " + totaldelay + "\n");
 
 } else if(msgArray.length == 6) {
 
@@ -108,7 +108,7 @@ packetsSent[id]++;
 
 timeSent[id] = time;
 
-log.log( “\n” + ” packetsSent[id]”  + packetsSent[id]  + ” timeSent[id] ” + timeSent[id] +  ” id ” + id + “\n”);
+log.log( "\n" + " packetsSent[id]"  + packetsSent[id]  + " timeSent[id] " + timeSent[id] +  " id " + id + "\n");
 
 }
 
