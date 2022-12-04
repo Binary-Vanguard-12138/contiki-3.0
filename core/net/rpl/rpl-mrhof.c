@@ -113,7 +113,7 @@ calculate_path_metric(rpl_parent_t *p)
 #elif RPL_DAG_MC == RPL_DAG_MC_ENERGY
   return p->mc.obj.energy.energy_est + (uint16_t)nbr->link_metric;
 #elif RPL_DAG_MC == RPL_DAG_MC_HOP
-  printf("Hop count to the root %u \n", p->mc.obj.hc);
+  // printf("Hop count to the root %u \n", p->mc.obj.hc);
   return p->mc.obj.hc + 1;
 #else
 #error "Unsupported RPL_DAG_MC configured. See rpl.h."

@@ -372,6 +372,7 @@ dio_input(void)
       else if (dio.mc.type == RPL_DAG_MC_HOP)
       {
         dio.mc.obj.hc = get32(buffer, i + 6);
+        printf("RPL: DAG_MC_HOP: hop_count %u\n", dio.mc.obj.hc);
       }
       else
       {
@@ -455,7 +456,7 @@ dio_input(void)
         return;
       }
       dio.dag_size = buffer[i + 2];
-      printf("RPL: dio recieved with stability option dag_size=%u\n", dio.dag_size);
+      printf("RPL: dio received with stability option dag_size=%u\n", dio.dag_size);
       break;
 
     default:
@@ -562,6 +563,7 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
       buffer[pos++] = 8;
       set32(buffer, pos, instance->mc.obj.hc);
       pos += 4;
+      printf("RPL: dag metric container option with hop_count=%u \n", instance->mc.obj.hc);
     }
     else
     {
@@ -622,7 +624,7 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     buffer[pos++] = 1;
     dag->dag_size = uip_ds6_route_num_routes();
     buffer[pos++] = dag->dag_size;
-    printf("RPL: stability option with dag_size=%u \n", buffer[pos - 1]);
+    printf("RPL: stability option with dag_size=%u \n", dag->dag_size);
   }
 
 #if RPL_LEAF_ONLY
