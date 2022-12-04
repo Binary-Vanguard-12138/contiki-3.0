@@ -372,7 +372,7 @@ dio_input(void)
       else if (dio.mc.type == RPL_DAG_MC_HOP)
       {
         dio.mc.obj.hc = get32(buffer, i + 6);
-        printf("RPL: DAG_MC_HOP: hop_count %u\n", dio.mc.obj.hc);
+        printf("RPL: DAG_MC_HOP: dio received with dag metric container option, hop_count %u\n", dio.mc.obj.hc);
       }
       else
       {
@@ -456,7 +456,7 @@ dio_input(void)
         return;
       }
       dio.dag_size = buffer[i + 2];
-      printf("RPL: dio received with stability option dag_size=%u\n", dio.dag_size);
+      printf("RPL: dio received with stability option, dag_size=%u\n", dio.dag_size);
       break;
 
     default:
