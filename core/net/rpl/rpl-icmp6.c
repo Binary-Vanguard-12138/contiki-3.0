@@ -248,7 +248,6 @@ dio_input(void)
   PRINTF("RPL: Received a DIO from ");
   PRINT6ADDR(&from);
   PRINTF("\n");
-  printf("RPL: [RX] %u\n", buffer_length);
 
   if ((nbr = uip_ds6_nbr_lookup(&from)) == NULL)
   {
@@ -279,6 +278,7 @@ dio_input(void)
   }
 
   buffer_length = uip_len - uip_l3_icmp_hdr_len;
+  printf("RPL: [RX] %u\n", buffer_length);
 
   /* Process the DIO base option. */
   i = 0;
