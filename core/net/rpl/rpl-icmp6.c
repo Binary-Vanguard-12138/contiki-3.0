@@ -221,7 +221,6 @@ void dis_output(uip_ipaddr_t *addr)
 static void
 dio_input(void)
 {
-  // printf("================= dio_input\n");
   unsigned char *buffer;
   uint8_t buffer_length;
   rpl_dio_t dio;
@@ -246,9 +245,9 @@ dio_input(void)
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 
   /* DAG Information Object */
-  PRINTF("RPL: Received a DIO from ");
-  PRINT6ADDR(&from);
-  PRINTF("\n");
+  printf("RPL: Received a DIO from ");
+  uip_debug_ipaddr_print(&from);
+  printf("\n");
 
   if ((nbr = uip_ds6_nbr_lookup(&from)) == NULL)
   {
@@ -289,10 +288,11 @@ dio_input(void)
   dio.rank = get16(buffer, i);
   i += 2;
 
-  PRINTF("RPL: Incoming DIO (id, ver, rank) = (%u,%u,%u)\n",
+  printf("RPL: Incoming DIO (id, ver, rank, buffer_length) = (%u,%u,%u,%u)\n",
          (unsigned)dio.instance_id,
          (unsigned)dio.version,
-         (unsigned)dio.rank);
+         (unsigned)dio.rank,
+         (unsigned)buffer_length);
 
   dio.grounded = buffer[i] & RPL_DIO_GROUNDED;
   dio.mop = (buffer[i] & RPL_DIO_MOP_MASK) >> RPL_DIO_MOP_SHIFT;
@@ -643,17 +643,17 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* Unicast requests get unicast replies! */
   if (uc_addr == NULL)
   {
-    PRINTF("RPL: Sending a multicast-DIO with rank %u\n",
+    printf("RPL: Sending a multicast-DIO with rank %u\n",
            (unsigned)instance->current_dag->rank);
     uip_create_linklocal_rplnodes_mcast(&addr);
     uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO, pos);
   }
   else
   {
-    PRINTF("RPL: Sending unicast-DIO with rank %u to ",
+    printf("RPL: Sending unicast-DIO with rank %u to ",
            (unsigned)instance->current_dag->rank);
-    PRINT6ADDR(uc_addr);
-    PRINTF("\n");
+    uip_debug_ipaddr_print(uc_addr);
+    printf("\n");
     uip_icmp6_send(uc_addr, ICMP6_RPL, RPL_CODE_DIO, pos);
   }
 #endif /* RPL_LEAF_ONLY */
