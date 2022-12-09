@@ -51,13 +51,17 @@ timeout_function = function () {
         log.log("\n");
         log.log(
             "Throughput = " +
-                (g_anRxBytes[i] * 1000000) / sim.getSimulationTime() +
+                Math.round(
+                    (g_anRxBytes[i] * 1000000) / sim.getSimulationTime()
+                ) +
                 " bytes/second\n"
         );
         log.log(
             "PDR = " +
-                (g_anRxPacketsCount[i] * 100) /
-                    (g_anMTxPacketsCount[i] + g_anUTxPacketsCount[i]) +
+                Math.round(
+                    (g_anRxPacketsCount[i] * 100) /
+                        (g_anMTxPacketsCount[i] + g_anUTxPacketsCount[i])
+                ) +
                 " %\n"
         );
     }
@@ -84,13 +88,15 @@ timeout_function = function () {
     log.log("\n");
     log.log(
         "Throughput = " +
-            (g_nTotalRxBytes * 1000000) / sim.getSimulationTime() +
+            Math.round((g_nTotalRxBytes * 1000000) / sim.getSimulationTime()) +
             " bytes/second\n"
     );
     log.log(
         "PDR = " +
-            (g_nTotalRxPackesCount * 100) /
-                (g_nTotalMTxPackesCount + g_nTotalUTxPackesCount) +
+            Math.round(
+                (g_nTotalRxPackesCount * 100) /
+                    (g_nTotalMTxPackesCount + g_nTotalUTxPackesCount)
+            ) +
             " %\n"
     );
     log.testOK();
