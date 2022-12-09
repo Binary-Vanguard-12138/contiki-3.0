@@ -9,7 +9,7 @@ g_anMTxBytes = new Array();
 g_anUTxPacketsCount = new Array();
 g_anUTxBytes = new Array();
 
-for (i = 0; i < g_nMoteCount; i++) {
+for (i = 1; i <= g_nMoteCount; i++) {
     g_anRxPacketsCount[i] = 0;
     g_anRxBytes[i] = 0;
     g_anMTxPacketsCount[i] = 0;
@@ -27,8 +27,8 @@ g_nTotalUTxBytes = 0;
 
 timeout_function = function () {
     log.log("Script timed out.\n");
-    for (i = 0; i < g_nMoteCount; i++) {
-        log.log("Mote [" + (i + 1) + "]");
+    for (i = 1; i <= g_nMoteCount; i++) {
+        log.log("Mote [" + i + "]");
         if (0 < g_anRxPacketsCount[i]) {
             log.log(" rx_packets = " + g_anRxPacketsCount[i]);
         }
@@ -49,6 +49,17 @@ timeout_function = function () {
             log.log(" utx_bytes = " + g_anUTxBytes[i]);
         }
         log.log("\n");
+        log.log(
+            "Throughput = " +
+                (g_anRxBytes[i] * 1000000) / sim.getSimulationTime() +
+                " bytes/second\n"
+        );
+        log.log(
+            "PDR = " +
+                (g_anRxPacketsCount[i] * 100) /
+                    (g_anMTxPacketsCount[i] + g_anUTxPacketsCount[i]) +
+                " %\n"
+        );
     }
     log.log("[TOTAL]");
     if (0 < g_nTotalRxPackesCount) {
@@ -71,6 +82,17 @@ timeout_function = function () {
         log.log(" utx_bytes = " + g_nTotalUTxBytes);
     }
     log.log("\n");
+    log.log(
+        "Throughput = " +
+            (g_nTotalRxBytes * 1000000) / sim.getSimulationTime() +
+            " bytes/second\n"
+    );
+    log.log(
+        "PDR = " +
+            (g_nTotalRxPackesCount * 100) /
+                (g_nTotalMTxPackesCount + g_nTotalUTxPackesCount) +
+            " %\n"
+    );
     log.testOK();
 };
 
