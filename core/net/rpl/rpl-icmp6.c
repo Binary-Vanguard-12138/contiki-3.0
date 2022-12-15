@@ -660,7 +660,7 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     PRINT6ADDR(uc_addr);
     PRINTF("\n");
     uip_icmp6_send(uc_addr, ICMP6_RPL, RPL_CODE_DIO, pos);
-    printf("[RPL] [DIO] [UTX] %u %u\n", uc_addr.u8[sizeof(uc_addr) - 1], pos); // The last byte of address is the number of node
+    printf("[RPL] [DIO] [UTX] %u %u\n", uc_addr->u8[sizeof(*uc_addr) - 1], pos); // The last byte of address is the number of node
   }
 #endif /* RPL_LEAF_ONLY */
 }
