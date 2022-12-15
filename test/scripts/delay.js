@@ -1,81 +1,54 @@
 TIMEOUT(300000, log.log("Total PRR " + totalPRR + "\n"));
 
-packetsReceived = new Array();
-packetsSent = new Array();
-serverID = 1;
-nodeCount = 31;
-totalPRR = 0;
-t_total = 0;
-throughput = 0;
-data_length = 23;
-Average_delay = 0;
-timeReceived = new Array();
-timeSent = new Array();
-delay = new Array();
-for (i = 0; i <= nodeCount; i++) {
-    packetsReceived[i] = 0;
-    packetsSent[i] = 0;
-    timeReceived[i] = 0.0;
-    timeSent[i] = 0.0;
-    delay[i] = 0.0;
+g_aMotes = sim.getMotes();
+g_nMoteCount = g_aMotes.length;
+
+g_anRxPacketsCount = new Array();
+g_anTxPacketsCount = new Array();
+g_afRxTime = new Array();
+g_afTxTime = new Array();
+g_afDelay = new Array();
+g_fTotalDelay = 0;
+g_fAverageDelay = 0;
+
+for (i = 0; i <= g_nMoteCount; i++) {
+    g_anRxPacketsCount[i] = 0;
+    g_anTxPacketsCount[i] = 0;
+    g_afRxTime[i] = 0.0;
+    g_afTxTime[i] = 0.0;
+    g_afDelay[i] = 0.0;
 }
+
+timeout_function = function () {
+    for (i = 1; i <= g_nMoteCount; i++) {
+        log.log("Mote [" + i + "] delayed " + g_afDelay[i] + " microseconds\n");
+    }
+    log.log("Total delayed " + g_fTotalDelay + " microseconds\n");
+    g_fAverageDelay = g_fTotalDelay / g_nMoteCount;
+    log.log("Average delayed " + g_fAverageDelay + " microseconds\n");
+};
 
 while (1) {
     YIELD();
-    msgArray = msg.split(" ");
-    if (msgArray[0].equals("DATA")) {
-        if (msgArray.length == 9) {
+    aMsg = msg.split(" ");
+    if (aMsg[0].equals("DATA")) {
+        if (aMsg[1] == "recv" || aMsg.length == 9) {
             // Received packet
 
-            senderID = parseInt(msgArray[8]);
-            packetsReceived[senderID]++;
-            timeReceived[senderID] = time;
-            log.log(
-                "\n" +
-                    " SenderID " +
-                    senderID +
-                    " PRR " +
-                    packetsReceived[senderID] / packetsSent[senderID] +
-                    "timeReceived[senderID]" +
-                    timeReceived[senderID] +
-                    " timeSent[senderID] " +
-                    timeSent[senderID] +
-                    "\n"
-            );
-            totalReceived = totalSent = 0;
-            totaldelay = 0;
-            count1 = 0;
-            for (i = serverID + 1; i <= nodeCount; i++) {
-                totalReceived += packetsReceived[i];
-                totalSent += packetsSent[i];
-                if (timeReceived[i] > 0) {
-                    delay[i] = timeReceived[i] - timeSent[i];
-                    delay[i] = delay[i] / 10000000;
-                    //   log.log("\n" + " delay[i] " + delay[i] + " iiii " + i + "\n");
-                    if (delay[i] > 0) {
-                        totaldelay = totaldelay + delay[i];
-                        count1++;
-                    }
+            senderID = parseInt(aMsg[8]);
+            g_anRxPacketsCount[senderID]++;
+            g_afRxTime[senderID] = time;
+            if (g_afTxTime[senderID] > 0) {
+                fDelay = g_afRxTime[i] - g_afTxTime[i];
+                if (fDelay > 0) {
+                    g_afDelay[i] += fDelay;
+                    g_fTotalDelay += fDelay;
                 }
             }
-            totalPRR = totalReceived / totalSent;
-            t_total = totalPRR * 100;
-            log.log("\n" + " Total_delay " + totaldelay + "\n");
-        } else if (msgArray.length == 6) {
+        } else if (aMsg[1] == "send" || aMsg.length == 6) {
             // Sent packet
-
-            packetsSent[id]++;
-            timeSent[id] = time;
-            log.log(
-                "\n" +
-                    " packetsSent[id]" +
-                    packetsSent[id] +
-                    " timeSent[id] " +
-                    timeSent[id] +
-                    " id " +
-                    id +
-                    "\n"
-            );
+            g_anTxPacketsCount[id]++;
+            g_afTxTime[id] = time;
         }
     }
 }
