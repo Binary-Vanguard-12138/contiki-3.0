@@ -57,22 +57,22 @@ while (true) {
         continue;
     }
 
-    if (aMsg[0] !== "[RPL]") {
+    if (aMsg[0] != "[RPL]") {
         continue;
     }
 
     // Should count only RX packets.
-    if (aMsg[1] == "[DIO]" && aMsg[2] !== "[RX]") {
+    if (aMsg[1] == "[DIO]" && aMsg[2] != "[RX]") {
         g_anDioSentCount[id]++;
         g_nTotalDioSent++;
         g_nTotalRpl++;
     }
-    if (aMsg[1] == "[DAO]" && aMsg[2] !== "[RX]") {
+    if (aMsg[1] == "[DAO]" && aMsg[2] != "[RX]") {
         g_anDaoSentCount[id]++;
         g_nTotalDaoSent++;
         g_nTotalRpl++;
     }
-    if (aMsg[1] == "[DIS]" && aMsg[2] !== "[RX]") {
+    if (aMsg[1] == "[DIS]" && aMsg[2] != "[RX]") {
         g_anDisSentCount[id]++;
         g_nTotalDisSent++;
         g_nTotalRpl++;
