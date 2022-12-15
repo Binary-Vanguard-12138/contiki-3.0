@@ -161,7 +161,7 @@ dis_input(void)
   PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
   PRINTF("\n");
 
-  printf("[RPL] [DIS] [RX] %u %u\n", UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr) - 1], uip_len - uip_l3_icmp_hdr_len;); // The last byte of address is the number of node
+  printf("[RPL] [DIS] [RX] %u %u\n", UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr) - 1], uip_len - uip_l3_icmp_hdr_len); // The last byte of address is the number of node
 
   for (instance = &instance_table[0], end = instance + RPL_MAX_INSTANCES;
        instance < end; ++instance)
