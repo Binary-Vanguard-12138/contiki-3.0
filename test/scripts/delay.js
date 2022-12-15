@@ -25,20 +25,18 @@ timeout_function = function () {
             "Mote [" +
                 i +
                 "] delayed " +
-                parseFloat(g_afDelay[i]).toFixed(2) +
-                " microseconds\n"
+                parseFloat(g_afDelay[i] / 1000).toFixed(2) +
+                " ms\n"
         );
     }
     log.log(
-        "Total delayed " +
-            parseFloat(g_fTotalDelay).toFixed(2) +
-            " microseconds\n"
+        "Total delayed " + parseFloat(g_fTotalDelay / 1000).toFixed(2) + " ms\n"
     );
     g_fAverageDelay = g_fTotalDelay / g_nMoteCount;
     log.log(
         "Average delayed " +
-            parseFloat(g_fAverageDelay).toFixed(2) +
-            " microseconds\n"
+            parseFloat(g_fAverageDelay / 1000).toFixed(2) +
+            " ms\n"
     );
 };
 

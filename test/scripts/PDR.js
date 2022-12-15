@@ -107,20 +107,20 @@ while (true) {
         continue;
     }
 
-    if (!aMsg[0].eqauls("[RPL]")) {
+    if (!aMsg[0].equals("[RPL]")) {
         continue;
     }
-    if (aMsg[2].eqauls("[RX]")) {
+    if (aMsg[2].equals("[RX]")) {
         g_anRxPacketsCount[id] += 1;
         g_nTotalRxPackesCount += 1;
         g_anRxBytes[id] += parseInt(aMsg[4]);
         g_nTotalRxBytes += parseInt(aMsg[4]);
-    } else if (aMsg[2].eqauls("[MTX]")) {
+    } else if (aMsg[2].equals("[MTX]")) {
         g_anMTxPacketsCount[id] += 1;
         g_nTotalMTxPackesCount += 1;
         g_anMTxBytes[id] += parseInt(aMsg[4]);
         g_nTotalMTxBytes += parseInt(aMsg[4]);
-    } else if (aMsg[2].eqauls("[UTX]")) {
+    } else if (aMsg[2].equals("[UTX]")) {
         g_anUTxPacketsCount[id] += 1;
         g_nTotalUTxPackesCount += 1;
         g_anUTxBytes[id] += parseInt(aMsg[4]);
