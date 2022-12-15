@@ -265,10 +265,6 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   }
 
   rpl_parent_t *best = p1_metric < p2_metric ? p1 : p2;
-  if (best->dag)
-  {
-    printf("best_parent %u\n", best->dag->dag_id.u8[sizeof(uip_ipaddr_t) - 1]);
-  }
   return best;
 }
 

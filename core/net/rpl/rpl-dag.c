@@ -918,6 +918,10 @@ rpl_select_parent(rpl_dag_t *dag)
 
   if (best != NULL)
   {
+    if (dag->preferred_parent != best)
+    {
+      printf("rpl_select_parent best->rank=%u\n", best->rank);
+    }
     rpl_set_preferred_parent(dag, best);
     dag->rank = dag->instance->of->calculate_rank(dag->preferred_parent, 0);
   }
