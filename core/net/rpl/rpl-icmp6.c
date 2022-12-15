@@ -161,6 +161,8 @@ dis_input(void)
   PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
   PRINTF("\n");
 
+  printf("[RPL] [DIS] [RX] %u %u\n", UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr) - 1], uip_len - uip_l3_icmp_hdr_len;); // The last byte of address is the number of node
+
   for (instance = &instance_table[0], end = instance + RPL_MAX_INSTANCES;
        instance < end; ++instance)
   {
@@ -214,6 +216,8 @@ void dis_output(uip_ipaddr_t *addr)
   PRINTF("RPL: Sending a DIS to ");
   PRINT6ADDR(addr);
   PRINTF("\n");
+
+  printf("[RPL] [DIS] [TX] %u %u\n", addr->u8[sizeof(*addr) - 1], 2); // The last byte of address is the number of node
 
   uip_icmp6_send(addr, ICMP6_RPL, RPL_CODE_DIS, 2);
 }
@@ -278,7 +282,7 @@ dio_input(void)
   }
 
   buffer_length = uip_len - uip_l3_icmp_hdr_len;
-  printf("RPL: [RX] %u\n", buffer_length);
+  printf("[RPL] [DIO] [RX] %u %u\n", from.u8[sizeof(from) - 1], buffer_length); // The last byte of address is the number of node
 
   /* Process the DIO base option. */
   i = 0;
@@ -647,7 +651,7 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
            (unsigned)instance->current_dag->rank);
     uip_create_linklocal_rplnodes_mcast(&addr);
     uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO, pos);
-    printf("RPL: [TX] [M] %u\n", pos);
+    printf("[RPL] [DIO] [MTX] %u %u\n", addr.u8[sizeof(addr) - 1], pos); // The last byte of address is the number of node
   }
   else
   {
@@ -656,7 +660,7 @@ void dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     PRINT6ADDR(uc_addr);
     PRINTF("\n");
     uip_icmp6_send(uc_addr, ICMP6_RPL, RPL_CODE_DIO, pos);
-    printf("RPL: [TX] [U] %u\n", pos);
+    printf("[RPL] [DIO] [UTX] %u %u\n", uc_addr.u8[sizeof(uc_addr) - 1], pos); // The last byte of address is the number of node
   }
 #endif /* RPL_LEAF_ONLY */
 }
@@ -760,6 +764,8 @@ dao_input(void)
       return;
     }
   }
+
+  printf("[RPL] [DAO] [RX] %u %u\n", dao_sender_addr.u8[sizeof(dao_sender_addr) - 1], buffer_length); // The last byte of address is the number of node
 
   /* Check if there are any RPL options present. */
   for (i = pos; i < buffer_length; i += len)
@@ -1017,12 +1023,15 @@ void dao_output_target(rpl_parent_t *parent, uip_ipaddr_t *prefix, uint8_t lifet
   PRINTF("RPL: Sending DAO with prefix ");
   PRINT6ADDR(prefix);
   PRINTF(" to ");
-  PRINT6ADDR(rpl_get_parent_ipaddr(parent));
+  uip_ipaddr_t *parent_ipaddr = rpl_get_parent_ipaddr(parent);
+  PRINT6ADDR(parent_ipaddr);
   PRINTF("\n");
 
-  if (rpl_get_parent_ipaddr(parent) != NULL)
+  printf("[RPL] [DAO] [TX] %u %u\n", parent_ipaddr->u8[sizeof(*parent_ipaddr) - 1], pos); // The last byte of address is the number of node
+
+  if (parent_ipaddr != NULL)
   {
-    uip_icmp6_send(rpl_get_parent_ipaddr(parent), ICMP6_RPL, RPL_CODE_DAO, pos);
+    uip_icmp6_send(parent_ipaddr, ICMP6_RPL, RPL_CODE_DAO, pos);
   }
 }
 /*---------------------------------------------------------------------------*/
