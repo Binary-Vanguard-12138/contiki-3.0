@@ -1,4 +1,4 @@
-TIMEOUT(300000, log.log("Total PRR " + totalPRR + "\n"));
+TIMEOUT(300000); // simulation duration in milliseconds
 
 g_aMotes = sim.getMotes();
 g_nMoteCount = g_aMotes.length;
@@ -32,20 +32,20 @@ while (1) {
     YIELD();
     aMsg = msg.split(" ");
     if (aMsg[0].equals("DATA")) {
-        if (aMsg[1] == "recv" || aMsg.length == 9) {
+        if (aMsg[1].equals("recv") || aMsg.length == 9) {
             // Received packet
 
-            senderID = parseInt(aMsg[8]);
-            g_anRxPacketsCount[senderID]++;
-            g_afRxTime[senderID] = time;
-            if (g_afTxTime[senderID] > 0) {
-                fDelay = g_afRxTime[i] - g_afTxTime[i];
+            nSenderId = parseInt(aMsg[8]);
+            g_anRxPacketsCount[nSenderId]++;
+            g_afRxTime[nSenderId] = time;
+            if (g_afTxTime[nSenderId] > 0) {
+                fDelay = g_afRxTime[nSenderId] - g_afTxTime[nSenderId];
                 if (fDelay > 0) {
-                    g_afDelay[i] += fDelay;
+                    g_afDelay[nSenderId] += fDelay;
                     g_fTotalDelay += fDelay;
                 }
             }
-        } else if (aMsg[1] == "send" || aMsg.length == 6) {
+        } else if (aMsg[1].equals("send") || aMsg.length == 6) {
             // Sent packet
             g_anTxPacketsCount[id]++;
             g_afTxTime[id] = time;
