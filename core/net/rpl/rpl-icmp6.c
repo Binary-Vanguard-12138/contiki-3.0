@@ -840,10 +840,12 @@ dao_input(void)
       if (dag->preferred_parent != NULL &&
           rpl_get_parent_ipaddr(dag->preferred_parent) != NULL)
       {
+        uip_ipaddr_t *parent_ipaddr = rpl_get_parent_ipaddr(dag->preferred_parent);
         PRINTF("RPL: Forwarding no-path DAO to parent ");
-        PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+        PRINT6ADDR(parent_ipaddr);
         PRINTF("\n");
-        uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
+        printf("[RPL] [DAO] [TX] %u %u\n", parent_ipaddr->u8[sizeof(*parent_ipaddr) - 1], buffer_length); // The last byte of address is the number of node
+        uip_icmp6_send(parent_ipaddr,
                        ICMP6_RPL, RPL_CODE_DAO, buffer_length);
       }
       if (flags & RPL_DAO_K_FLAG)
@@ -908,10 +910,12 @@ fwd_dao:
     if (dag->preferred_parent != NULL &&
         rpl_get_parent_ipaddr(dag->preferred_parent) != NULL)
     {
+      uip_ipaddr_t *parent_ipaddr = rpl_get_parent_ipaddr(dag->preferred_parent);
       PRINTF("RPL: Forwarding DAO to parent ");
-      PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+      PRINT6ADDR(parent_ipaddr);
       PRINTF("\n");
-      uip_icmp6_send(rpl_get_parent_ipaddr(dag->preferred_parent),
+      printf("[RPL] [DAO] [TX] %u %u\n", parent_ipaddr->u8[sizeof(*parent_ipaddr) - 1], buffer_length); // The last byte of address is the number of node
+      uip_icmp6_send(parent_ipaddr,
                      ICMP6_RPL, RPL_CODE_DAO, buffer_length);
     }
     if (flags & RPL_DAO_K_FLAG)
@@ -1075,6 +1079,7 @@ void dao_ack_output(rpl_instance_t *instance, uip_ipaddr_t *dest, uint8_t sequen
   buffer[2] = sequence;
   buffer[3] = 0;
 
+  printf("[RPL] [DAO] [TX] %u %u\n", dest->u8[sizeof(*dest) - 1], 4); // The last byte of address is the number of node
   uip_icmp6_send(dest, ICMP6_RPL, RPL_CODE_DAO_ACK, 4);
 }
 /*---------------------------------------------------------------------------*/
